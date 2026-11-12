@@ -3,6 +3,10 @@ import SwiftData
 
 @main
 struct SimpleTasksApp: App {
+    init() {
+        AppFont.register()
+    }
+
     let container: ModelContainer = {
         let schema = Schema([TaskItem.self])
         do {
@@ -21,5 +25,8 @@ struct SimpleTasksApp: App {
             ContentView()
         }
         .modelContainer(container)
+        #if os(macOS)
+        .defaultSize(width: 420, height: 640)
+        #endif
     }
 }

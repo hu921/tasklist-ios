@@ -2,37 +2,82 @@ import SwiftUI
 import SwiftData
 import Combine
 
+/// The four tabs at the top.
+enum AppTab: String, CaseIterable, Identifiable {
+    case daily, weekly, monthly, summary
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .daily: "Daily"
+        case .weekly: "Weekly"
+        case .monthly: "Monthly"
+        case .summary: "Summary"
+        }
+    }
+
+    var period: Period? {
+        switch self {
+        case .daily: .daily
+        case .weekly: .weekly
+        case .monthly: .monthly
+        case .summary: nil
+        }
+    }
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.scenePhase) private var scenePhase
 
-    @State private var period: Period = .daily
+    @State private var tab: AppTab = .daily
     /// Pages away from the current day, week, or month. 0 = current.
     @State private var offset = 0
     @State private var now = Date.now
-
-    private var pageStart: Date {
-        period.shift(period.start(of: now), by: offset)
-    }
+    @State private var showsAbout = false
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                Picker("Period", selection: $period) {
-                    ForEach(Period.allCases) { Text($0.title).tag($0) }
+                TabSelector(selection: $tab)
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+
+                if let period = tab.period {
+                    let pageStart = period.shift(period.start(of: now), by: offset)
+                    pageHeader(period: period, pageStart: pageStart)
+                    TaskPage(period: period, start: pageStart)
+                } else {
+                    SummaryView()
+                        .padding(.top, 8)
                 }
-                .pickerStyle(.segmented)
-                .padding(.horizontal)
-                .padding(.top, 8)
-
-                pageHeader
-
-                TaskPage(period: period, start: pageStart)
             }
-            .navigationTitle("Simple Tasks")
+            .navigationTitle("Simple Todo")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Simple Todo").font(.appHeadline)
+                }
+            }
+            #endif
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showsAbout = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                    }
+                    .accessibilityLabel("About")
+                }
+            }
+            .sheet(isPresented: $showsAbout) {
+                AboutView()
+            }
         }
-        .onChange(of: period) { offset = 0 }
+        .font(.appBody)
+        .onChange(of: tab) { offset = 0 }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { refresh() }
         }
@@ -43,23 +88,27 @@ struct ContentView: View {
         .task { refresh() }
     }
 
-    private var pageHeader: some View {
+    private func pageHeader(period: Period, pageStart: Date) -> some View {
         HStack {
             Button {
                 offset -= 1
             } label: {
-                Image(systemName: "chevron.left").padding()
+                Image(systemName: "chevron.left")
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.borderless)
             .accessibilityLabel("Previous")
 
             Spacer()
 
             VStack(spacing: 2) {
                 Text(period.label(for: pageStart))
-                    .font(.headline)
+                    .font(.appHeadline)
                 if offset != 0 {
                     Button(period.currentLabel) { offset = 0 }
-                        .font(.caption)
+                        .buttonStyle(.borderless)
+                        .font(.appCaption)
                 }
             }
 
@@ -68,16 +117,52 @@ struct ContentView: View {
             Button {
                 offset += 1
             } label: {
-                Image(systemName: "chevron.right").padding()
+                Image(systemName: "chevron.right")
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.borderless)
             .accessibilityLabel("Next")
         }
+        .padding(.horizontal, 4)
         .padding(.vertical, 4)
     }
 
     private func refresh() {
         now = .now
         CarryOver.run(in: context, now: now)
+    }
+}
+
+/// Daily / Weekly / Monthly / Summary buttons, drawn in Roboto.
+struct TabSelector: View {
+    @Binding var selection: AppTab
+
+    var body: some View {
+        HStack(spacing: 2) {
+            ForEach(AppTab.allCases) { tab in
+                let isSelected = selection == tab
+                Button {
+                    selection = tab
+                } label: {
+                    Text(tab.title)
+                        .font(.appTab)
+                        .foregroundStyle(isSelected ? Color.white : Color.primary)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 7)
+                        .background {
+                            if isSelected {
+                                RoundedRectangle(cornerRadius: 7).fill(Color.accentColor)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isSelected ? .isSelected : [])
+            }
+        }
+        .padding(2)
+        .background(RoundedRectangle(cornerRadius: 9).fill(Color.secondary.opacity(0.15)))
     }
 }
 
@@ -114,6 +199,11 @@ struct TaskPage: View {
         List {
             ForEach(rows) { task in
                 TaskRow(task: task, showsFlag: period == .daily)
+                    .contextMenu {
+                        Button("Delete", systemImage: "trash", role: .destructive) {
+                            context.delete(task)
+                        }
+                    }
             }
             .onDelete { indexes in
                 for index in indexes { context.delete(rows[index]) }
@@ -133,7 +223,7 @@ struct TaskPage: View {
             if !tasks.isEmpty {
                 let done = tasks.filter(\.isDone).count
                 Text("\(done) of \(tasks.count) done")
-                    .font(.footnote)
+                    .font(.appFootnote)
                     .foregroundStyle(.secondary)
                     .listRowSeparator(.hidden)
             }
