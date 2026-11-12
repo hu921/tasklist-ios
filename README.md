@@ -7,6 +7,9 @@ A simple booklet-style to-do list. Daily, weekly, and monthly pages with check b
 - Tap the box to check off a task. Swipe left to delete.
 - Daily tasks: tap the flag to mark Urgent (red). Urgent tasks show at the top.
 - Unfinished tasks move to the current day, week, or month automatically.
+- Summary tab: tasks done vs. not done for each week, with a star for weeks where everything was done.
+- Roboto font (Apache 2.0, in `SimpleTasks/Fonts`).
+- About page (ⓘ button): version and developer info.
 - Syncs through iCloud. No sign-in.
 
 ## Requirements

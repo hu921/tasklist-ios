@@ -3,6 +3,10 @@ import SwiftData
 
 @main
 struct SimpleTasksApp: App {
+    init() {
+        AppFont.register()
+    }
+
     let container: ModelContainer = {
         let schema = Schema([TaskItem.self])
         do {
