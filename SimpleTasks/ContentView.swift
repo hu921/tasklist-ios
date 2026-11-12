@@ -104,13 +104,19 @@ struct TaskPage: View {
         )
     }
 
+    /// Urgent tasks first, then the rest, each in the order they were added.
+    private var sortedTasks: [TaskItem] {
+        tasks.filter(\.isUrgent) + tasks.filter { !$0.isUrgent }
+    }
+
     var body: some View {
+        let rows = sortedTasks
         List {
-            ForEach(tasks) { task in
-                TaskRow(task: task)
+            ForEach(rows) { task in
+                TaskRow(task: task, showsFlag: period == .daily)
             }
             .onDelete { indexes in
-                for index in indexes { context.delete(tasks[index]) }
+                for index in indexes { context.delete(rows[index]) }
             }
 
             HStack(spacing: 12) {
@@ -147,6 +153,7 @@ struct TaskPage: View {
 /// One line with a check box.
 struct TaskRow: View {
     @Bindable var task: TaskItem
+    var showsFlag = false
 
     var body: some View {
         HStack(spacing: 12) {
@@ -162,6 +169,18 @@ struct TaskRow: View {
             TextField("Task", text: $task.title, axis: .vertical)
                 .strikethrough(task.isDone)
                 .foregroundStyle(task.isDone ? .secondary : .primary)
+
+            if showsFlag {
+                Button {
+                    task.isUrgent.toggle()
+                } label: {
+                    Image(systemName: task.isUrgent ? "flag.fill" : "flag")
+                        .font(.title3)
+                        .foregroundStyle(task.isUrgent ? AnyShapeStyle(.red) : AnyShapeStyle(.tertiary))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(task.isUrgent ? "Remove urgent flag" : "Mark urgent")
+            }
         }
     }
 
