@@ -24,13 +24,18 @@ struct AboutView: View {
 
                 Section {
                     LabeledContent("Version", value: AppInfo.version)
-                    LabeledContent("Developer", value: AppInfo.developerName)
-                    LabeledContent("Email") {
-                        Link(AppInfo.email, destination: URL(string: "mailto:\(AppInfo.email)")!)
+                    if let name = AppInfo.developerName {
+                        LabeledContent("Developer", value: name)
                     }
-                    LabeledContent("Website") {
-                        Link(AppInfo.website.host() ?? AppInfo.website.absoluteString,
-                             destination: AppInfo.website)
+                    if let email = AppInfo.email, let mail = URL(string: "mailto:\(email)") {
+                        LabeledContent("Email") {
+                            Link(email, destination: mail)
+                        }
+                    }
+                    if let website = AppInfo.website {
+                        LabeledContent("Website") {
+                            Link(website.host() ?? website.absoluteString, destination: website)
+                        }
                     }
                 }
             }

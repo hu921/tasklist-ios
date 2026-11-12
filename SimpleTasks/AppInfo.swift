@@ -1,10 +1,10 @@
 import Foundation
 
-/// Shown on the About page.
+/// Shown on the About page. Rows with `nil` are hidden.
 enum AppInfo {
-    static let developerName = "Your Name"
-    static let email = "you@example.com"
-    static let website = URL(string: "https://example.com")!
+    static let developerName: String? = nil
+    static let email: String? = nil
+    static let website: URL? = nil
 
     static var version: String {
         let info = Bundle.main.infoDictionary
