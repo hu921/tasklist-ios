@@ -143,6 +143,7 @@
 				TargetAttributes = {
 					46327BCFD762113E3C8271BA = {
 						CreatedOnToolsVersion = 15.0;
+						DevelopmentTeam = JRUQYNVARF;
 					};
 				};
 			};
@@ -210,6 +211,7 @@
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -318,6 +320,7 @@
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
