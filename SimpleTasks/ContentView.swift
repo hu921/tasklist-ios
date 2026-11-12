@@ -30,7 +30,9 @@ struct ContentView: View {
                 TaskPage(period: period, start: pageStart)
             }
             .navigationTitle("Simple Tasks")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
         }
         .onChange(of: period) { offset = 0 }
         .onChange(of: scenePhase) { _, phase in
@@ -114,6 +116,11 @@ struct TaskPage: View {
         List {
             ForEach(rows) { task in
                 TaskRow(task: task, showsFlag: period == .daily)
+                    .contextMenu {
+                        Button("Delete", systemImage: "trash", role: .destructive) {
+                            context.delete(task)
+                        }
+                    }
             }
             .onDelete { indexes in
                 for index in indexes { context.delete(rows[index]) }

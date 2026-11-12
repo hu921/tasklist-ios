@@ -21,5 +21,8 @@ struct SimpleTasksApp: App {
             ContentView()
         }
         .modelContainer(container)
+        #if os(macOS)
+        .defaultSize(width: 420, height: 640)
+        #endif
     }
 }
