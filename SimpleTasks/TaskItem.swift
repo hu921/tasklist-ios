@@ -10,6 +10,8 @@ final class TaskItem {
     /// Start of the day, week, or month this task belongs to.
     var periodStart: Date = Date.now
     var isDone: Bool = false
+    /// Red flag: must be done today. Daily tasks only.
+    var isUrgent: Bool = false
     var completedAt: Date?
     var createdAt: Date = Date.now
 

@@ -5,6 +5,7 @@ A simple booklet-style to-do list. Daily, weekly, and monthly pages with check b
 ## Features
 - Daily, Weekly, and Monthly pages. Arrows move to past or future pages.
 - Tap the box to check off a task. Swipe left to delete.
+- Daily tasks: tap the flag to mark Urgent (red). Urgent tasks show at the top.
 - Unfinished tasks move to the current day, week, or month automatically.
 - Syncs through iCloud. No sign-in.
 
