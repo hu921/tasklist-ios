@@ -1,4 +1,6 @@
-# Simple Tasks (iOS)
+# Simple Todo (iOS)
+
+App Store name: "Simple Todo: Daily task". Studio: journipod.
 
 A simple booklet-style to-do list. Daily, weekly, and monthly pages with check boxes.
 

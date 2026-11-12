@@ -11,7 +11,7 @@ struct AboutView: View {
                         Image(systemName: "checkmark.square.fill")
                             .font(.system(size: 56))
                             .foregroundStyle(.tint)
-                        Text("Simple Tasks")
+                        Text("Simple Todo")
                             .font(.appTitle)
                         Text("A simple daily, weekly, and monthly to-do list.")
                             .font(.appFootnote)

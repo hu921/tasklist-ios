@@ -215,7 +215,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimpleTasks/Info.plist;
 				"INFOPLIST_FILE[sdk=macosx*]" = "";
-				INFOPLIST_KEY_CFBundleDisplayName = "Simple Tasks";
+				INFOPLIST_KEY_CFBundleDisplayName = "Simple Todo";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -323,7 +323,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimpleTasks/Info.plist;
 				"INFOPLIST_FILE[sdk=macosx*]" = "";
-				INFOPLIST_KEY_CFBundleDisplayName = "Simple Tasks";
+				INFOPLIST_KEY_CFBundleDisplayName = "Simple Todo";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -53,12 +53,12 @@ struct ContentView: View {
                         .padding(.top, 8)
                 }
             }
-            .navigationTitle("Simple Tasks")
+            .navigationTitle("Simple Todo")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Simple Tasks").font(.appHeadline)
+                    Text("Simple Todo").font(.appHeadline)
                 }
             }
             #endif
