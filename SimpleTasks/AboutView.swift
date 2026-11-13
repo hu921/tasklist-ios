@@ -159,15 +159,15 @@ private struct AppearanceSection: View {
 
     var body: some View {
         Section(L("Appearance")) {
-            SettingPicker(L("Theme"), selection: $settings.theme) {
+            SettingPicker(L("Theme"), current: settings.theme.name, selection: $settings.theme) {
                 ForEach(AppSettings.Theme.allCases) { Text($0.name).tag($0) }
             }
-            SettingPicker(L("Font"), selection: $settings.fontFamily) {
+            SettingPicker(L("Font"), current: settings.fontFamily.name, selection: $settings.fontFamily) {
                 ForEach(AppSettings.FontFamily.allCases) { family in
                     Text(family.name).tag(family)
                 }
             }
-            SettingPicker(L("Font size"), selection: $settings.fontSize) {
+            SettingPicker(L("Font size"), current: settings.fontSize.name, selection: $settings.fontSize) {
                 ForEach(AppSettings.FontSize.allCases) { Text($0.name).tag($0) }
             }
             if settings.fontSize == .custom {
@@ -178,7 +178,7 @@ private struct AppearanceSection: View {
                     Text("A").font(.system(size: 22))
                 }
             }
-            SettingPicker(L("Language"), selection: $settings.language) {
+            SettingPicker(L("Language"), current: settings.language.name, selection: $settings.language) {
                 ForEach(AppSettings.Language.allCases) { Text($0.name).tag($0) }
             }
         }
@@ -205,14 +205,18 @@ struct LogDocument: FileDocument {
     }
 }
 
-/// A setting row whose menu button has the same width on every row (Mac).
+/// A setting row. On Mac every menu button has the same width;
+/// a name that does not fit ends with "…".
 private struct SettingPicker<Value: Hashable, Options: View>: View {
     let title: String
+    /// Name of the chosen option, shown on the Mac button.
+    let current: String
     @Binding var selection: Value
     @ViewBuilder let options: () -> Options
 
-    init(_ title: String, selection: Binding<Value>, @ViewBuilder options: @escaping () -> Options) {
+    init(_ title: String, current: String, selection: Binding<Value>, @ViewBuilder options: @escaping () -> Options) {
         self.title = title
+        self.current = current
         self._selection = selection
         self.options = options
     }
@@ -220,9 +224,30 @@ private struct SettingPicker<Value: Hashable, Options: View>: View {
     var body: some View {
         #if os(macOS)
         LabeledContent(title) {
-            Picker(title, selection: $selection, content: options)
-                .labelsHidden()
-                .frame(width: 170)
+            Menu {
+                Picker(title, selection: $selection, content: options)
+                    .pickerStyle(.inline)
+                    .labelsHidden()
+            } label: {
+                HStack(spacing: 6) {
+                    Text(current)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                    Spacer(minLength: 0)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .frame(width: 140)
+                .background(RoundedRectangle(cornerRadius: 5).fill(Color.secondary.opacity(0.15)))
+                .contentShape(Rectangle())
+            }
+            .menuStyle(.button)
+            .buttonStyle(.plain)
+            .menuIndicator(.hidden)
+            .fixedSize()
         }
         #else
         Picker(title, selection: $selection, content: options)
