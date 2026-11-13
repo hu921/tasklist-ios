@@ -189,9 +189,10 @@ struct TaskPage: View {
         )
     }
 
-    /// Urgent tasks first, then the rest, each in the order they were added.
+    /// Urgent tasks first, then the rest, each in the order they were added or moved here.
     private var sortedTasks: [TaskItem] {
-        tasks.filter(\.isUrgent) + tasks.filter { !$0.isUrgent }
+        let ordered = tasks.sorted { $0.listOrder < $1.listOrder }
+        return ordered.filter(\.isUrgent) + ordered.filter { !$0.isUrgent }
     }
 
     var body: some View {
@@ -200,6 +201,12 @@ struct TaskPage: View {
             ForEach(rows) { task in
                 TaskRow(task: task, showsFlag: period == .daily)
                     .contextMenu {
+                        ForEach(Period.allCases.filter { $0 != period }) { target in
+                            Button("Move to \(target.title)", systemImage: "arrow.right") {
+                                task.move(to: target)
+                            }
+                        }
+                        Divider()
                         Button("Delete", systemImage: "trash", role: .destructive) {
                             context.delete(task)
                         }
