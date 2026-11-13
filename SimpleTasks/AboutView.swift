@@ -1,10 +1,13 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
     private var sync = SyncStatus.shared
     /// Shown only in Xcode and TestFlight builds.
     @State private var isTestBuild = false
+    @State private var isSavingLog = false
+    @State private var logFile: LogDocument?
 
     var body: some View {
         NavigationStack {
@@ -59,6 +62,12 @@ struct AboutView: View {
                         ShareLink(item: AppLog.fileURL) {
                             Label("Share log", systemImage: "square.and.arrow.up")
                         }
+                        Button {
+                            logFile = LogDocument(data: (try? Data(contentsOf: AppLog.fileURL)) ?? Data())
+                            isSavingLog = true
+                        } label: {
+                            Label("Save log to file…", systemImage: "square.and.arrow.down")
+                        }
                     } header: {
                         Text("Testing")
                     } footer: {
@@ -71,6 +80,14 @@ struct AboutView: View {
             .task {
                 await sync.checkAccount()
                 isTestBuild = await AppLog.isTestBuild()
+            }
+            .fileExporter(
+                isPresented: $isSavingLog,
+                document: logFile,
+                contentType: .plainText,
+                defaultFilename: "SimpleTodo-log"
+            ) { result in
+                if case .failure(let error) = result { AppLog.error("save log failed", error) }
             }
             .navigationTitle("About")
             .toolbar {
@@ -87,4 +104,20 @@ struct AboutView: View {
 
 #Preview {
     AboutView()
+}
+
+/// The log as a plain text file, for "Save log to file…".
+struct LogDocument: FileDocument {
+    static var readableContentTypes: [UTType] { [.plainText] }
+    var data: Data
+
+    init(data: Data) { self.data = data }
+
+    init(configuration: ReadConfiguration) {
+        data = configuration.file.regularFileContents ?? Data()
+    }
+
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        FileWrapper(regularFileWithContents: data)
+    }
 }
