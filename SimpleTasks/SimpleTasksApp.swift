@@ -9,6 +9,7 @@ struct SimpleTasksApp: App {
 
     let container: ModelContainer = {
         let schema = Schema([TaskItem.self])
+        AppLog.logLaunch()
         SyncStatus.shared.start()
         do {
             // Syncs through the user's iCloud account. No sign-in in the app.

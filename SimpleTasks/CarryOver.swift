@@ -6,22 +6,25 @@ import SwiftData
 enum CarryOver {
     @MainActor
     static func run(in context: ModelContext, now: Date = .now) {
+        let started = Date.now
         let descriptor = FetchDescriptor<TaskItem>(predicate: #Predicate { $0.isDone == false })
         guard let openTasks = try? context.fetch(descriptor) else { return }
 
-        var changed = false
+        var removed = 0
+        var carried = 0
         for task in openTasks where task.isBlank {
             // A task whose text was erased is removed.
             context.delete(task)
-            changed = true
+            removed += 1
         }
         for task in openTasks where !task.isBlank {
             let current = task.period.start(of: now)
             if task.periodStart < current {
                 task.periodStart = current
-                changed = true
+                carried += 1
             }
         }
-        if changed { try? context.save() }
+        if removed + carried > 0 { try? context.save() }
+        AppLog.log("carry-over", "\(openTasks.count) open, \(carried) carried, \(removed) empty removed, \(AppLog.ms(since: started))")
     }
 }

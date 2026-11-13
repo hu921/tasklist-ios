@@ -3,6 +3,8 @@ import SwiftUI
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
     private var sync = SyncStatus.shared
+    /// Shown only in Xcode and TestFlight builds.
+    @State private var isTestBuild = false
 
     var body: some View {
         NavigationStack {
@@ -51,9 +53,25 @@ struct AboutView: View {
                             .textSelection(.enabled)
                     }
                 }
+
+                if isTestBuild {
+                    Section {
+                        ShareLink(item: AppLog.fileURL) {
+                            Label("Share log", systemImage: "square.and.arrow.up")
+                        }
+                    } header: {
+                        Text("Testing")
+                    } footer: {
+                        Text("Actions, sync, and errors only. No task text. Test builds only.")
+                            .font(.appFootnote)
+                    }
+                }
             }
             .font(.appBody)
-            .task { await sync.checkAccount() }
+            .task {
+                await sync.checkAccount()
+                isTestBuild = await AppLog.isTestBuild()
+            }
             .navigationTitle("About")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

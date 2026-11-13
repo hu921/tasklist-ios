@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		04911FE2C7D22CCA4D9E37D0 /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8E3152C54BF5B5FA3F6549 /* TaskItem.swift */; };
+		1D2BFC30061C6DD740681CD9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = DC29A1FAF28B1D5F20FBEC3A /* PrivacyInfo.xcprivacy */; };
 		3A7C8261CC5FE59C84EB4E3D /* SimpleTasksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DE74A4194D59AE1E41208F /* SimpleTasksApp.swift */; };
 		3BF9E5754DB2A15DA7A0B24B /* Period.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89099B1032D69E84FA1E6B49 /* Period.swift */; };
 		594470537D57B22E7AFB3177 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF1805B7F46089C2D6343A /* ContentView.swift */; };
@@ -16,6 +17,7 @@
 		65CA09FC4C9D18CBBA83C3DC /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 12ED9E4DF53B1102D4501927 /* Roboto-Medium.ttf */; };
 		76FA9281E6481278879B0AC3 /* AppFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8EC078CC9C874F860F43307 /* AppFont.swift */; };
 		AB564FC4AAF2B32C337B7689 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C18AF2FB8BD88F0BB06316F /* SummaryView.swift */; };
+		B147F15E5C02CB1EAB961D4C /* AppLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9062E6886FB779FDA130B9A5 /* AppLog.swift */; };
 		B8D2E5CE78A6D3C570DFCF9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D3C63BC4327D5AAE96F6214 /* Assets.xcassets */; };
 		C5E0068240B20AA2FDA0BEE8 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 912E5D95F305423BC87E9393 /* Roboto-Bold.ttf */; };
 		CCD10D626797F600200243EC /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BCD231113F7D21B658408E /* AppInfo.swift */; };
@@ -35,11 +37,13 @@
 		7C18AF2FB8BD88F0BB06316F /* SummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		89099B1032D69E84FA1E6B49 /* Period.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Period.swift; sourceTree = "<group>"; };
 		8D3C63BC4327D5AAE96F6214 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9062E6886FB779FDA130B9A5 /* AppLog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppLog.swift; sourceTree = "<group>"; };
 		912E5D95F305423BC87E9393 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		AC02CD34F847F903B37EE0BA /* Roboto-LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = "Roboto-LICENSE.txt"; sourceTree = "<group>"; };
 		B2BCD231113F7D21B658408E /* AppInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		C8DE74A4194D59AE1E41208F /* SimpleTasksApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SimpleTasksApp.swift; sourceTree = "<group>"; };
 		DA8E3152C54BF5B5FA3F6549 /* TaskItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TaskItem.swift; sourceTree = "<group>"; };
+		DC29A1FAF28B1D5F20FBEC3A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E8EC078CC9C874F860F43307 /* AppFont.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppFont.swift; sourceTree = "<group>"; };
 		EB5AF5C1274FBDC0E4E68B32 /* CarryOver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CarryOver.swift; sourceTree = "<group>"; };
 		FBAF1805B7F46089C2D6343A /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -91,6 +95,8 @@
 				7C18AF2FB8BD88F0BB06316F /* SummaryView.swift */,
 				BBF3D894F6879FE5385CEB8C /* Fonts */,
 				738E2BAE7FCD10C8F54D7ADA /* SyncStatus.swift */,
+				9062E6886FB779FDA130B9A5 /* AppLog.swift */,
+				DC29A1FAF28B1D5F20FBEC3A /* PrivacyInfo.xcprivacy */,
 			);
 			name = SimpleTasks;
 			path = SimpleTasks;
@@ -179,6 +185,7 @@
 				F2F45AECD401D7234A597AB8 /* Roboto-Regular.ttf in Resources */,
 				65CA09FC4C9D18CBBA83C3DC /* Roboto-Medium.ttf in Resources */,
 				C5E0068240B20AA2FDA0BEE8 /* Roboto-Bold.ttf in Resources */,
+				1D2BFC30061C6DD740681CD9 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,6 +206,7 @@
 				5ED90979167A15D6CF565DEE /* AboutView.swift in Sources */,
 				AB564FC4AAF2B32C337B7689 /* SummaryView.swift in Sources */,
 				FDF45444CCD39CBCC4BAE3E3 /* SyncStatus.swift in Sources */,
+				B147F15E5C02CB1EAB961D4C /* AppLog.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,7 +222,7 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleTasks/SimpleTasks.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -323,7 +331,7 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleTasks/SimpleTasks.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
