@@ -21,7 +21,7 @@ struct WishFormView: View {
             Form {
                 if sent {
                     Section {
-                        Label("Thank you! Your wish was sent.", systemImage: "sparkles")
+                        Label("Thank you! We read every wish.", systemImage: "sparkles")
                     }
                 } else {
                     Section {
@@ -45,7 +45,7 @@ struct WishFormView: View {
                 }
             }
             .font(.appBody)
-            .navigationTitle("Send a wish")
+            .navigationTitle(sent ? "Wish sent" : "Send a wish")
             .toolbar {
                 if sent {
                     ToolbarItem(placement: .confirmationAction) {
