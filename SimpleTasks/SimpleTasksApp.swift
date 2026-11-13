@@ -9,12 +9,19 @@ struct SimpleTasksApp: App {
 
     let container: ModelContainer = {
         let schema = Schema([TaskItem.self])
+        SyncStatus.shared.start()
         do {
             // Syncs through the user's iCloud account. No sign-in in the app.
-            let cloud = ModelConfiguration(schema: schema, cloudKitDatabase: .automatic)
-            return try ModelContainer(for: schema, configurations: cloud)
+            let cloud = ModelConfiguration(
+                schema: schema,
+                cloudKitDatabase: .private(SyncStatus.containerID)
+            )
+            let container = try ModelContainer(for: schema, configurations: cloud)
+            SyncStatus.shared.usingCloud()
+            return container
         } catch {
             // Falls back to on-device storage if iCloud is not available.
+            SyncStatus.shared.usingLocal(because: error)
             let local = ModelConfiguration(schema: schema, cloudKitDatabase: .none)
             return try! ModelContainer(for: schema, configurations: local)
         }

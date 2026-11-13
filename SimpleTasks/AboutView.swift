@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
+    private var sync = SyncStatus.shared
 
     var body: some View {
         NavigationStack {
@@ -38,8 +39,21 @@ struct AboutView: View {
                         }
                     }
                 }
+
+                Section("iCloud sync") {
+                    LabeledContent("Storage", value: sync.storage)
+                    LabeledContent("iCloud account", value: sync.account)
+                    LabeledContent("Last sync", value: sync.lastSync)
+                    if let error = sync.lastError {
+                        Text(error)
+                            .font(.appFootnote)
+                            .foregroundStyle(.red)
+                            .textSelection(.enabled)
+                    }
+                }
             }
             .font(.appBody)
+            .task { await sync.checkAccount() }
             .navigationTitle("About")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
