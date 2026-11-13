@@ -45,6 +45,17 @@ struct AboutView: View {
                     }
                 }
 
+                if let wish = AppInfo.wishMailURL {
+                    Section {
+                        Link(destination: wish) {
+                            Label("Send a wish", systemImage: "sparkles")
+                        }
+                    } footer: {
+                        Text("Ideas or problems? Email \(AppInfo.supportEmail).")
+                            .font(.appFootnote)
+                    }
+                }
+
                 Section("iCloud sync") {
                     LabeledContent("Storage", value: sync.storage)
                     LabeledContent("iCloud account", value: sync.account)
