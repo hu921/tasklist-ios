@@ -20,6 +20,7 @@
 		C5E0068240B20AA2FDA0BEE8 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 912E5D95F305423BC87E9393 /* Roboto-Bold.ttf */; };
 		CCD10D626797F600200243EC /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BCD231113F7D21B658408E /* AppInfo.swift */; };
 		F2F45AECD401D7234A597AB8 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 140BDAB94194CFAEB8672077 /* Roboto-Regular.ttf */; };
+		FDF45444CCD39CBCC4BAE3E3 /* SyncStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738E2BAE7FCD10C8F54D7ADA /* SyncStatus.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		350513A0F55E20D2BFDE6893 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		39129EF1956F3FF2949D5816 /* SimpleTasks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleTasks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FD31486B10356724DA164F1 /* AboutView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		738E2BAE7FCD10C8F54D7ADA /* SyncStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncStatus.swift; sourceTree = "<group>"; };
 		7C18AF2FB8BD88F0BB06316F /* SummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		89099B1032D69E84FA1E6B49 /* Period.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Period.swift; sourceTree = "<group>"; };
 		8D3C63BC4327D5AAE96F6214 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				4FD31486B10356724DA164F1 /* AboutView.swift */,
 				7C18AF2FB8BD88F0BB06316F /* SummaryView.swift */,
 				BBF3D894F6879FE5385CEB8C /* Fonts */,
+				738E2BAE7FCD10C8F54D7ADA /* SyncStatus.swift */,
 			);
 			name = SimpleTasks;
 			path = SimpleTasks;
@@ -195,6 +198,7 @@
 				CCD10D626797F600200243EC /* AppInfo.swift in Sources */,
 				5ED90979167A15D6CF565DEE /* AboutView.swift in Sources */,
 				AB564FC4AAF2B32C337B7689 /* SummaryView.swift in Sources */,
+				FDF45444CCD39CBCC4BAE3E3 /* SyncStatus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,7 +214,7 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleTasks/SimpleTasks.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -319,7 +323,7 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleTasks/SimpleTasks.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
