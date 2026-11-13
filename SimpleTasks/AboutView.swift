@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 struct AboutView: View {
     @Environment(\.dismiss) private var dismiss
     private var sync = SyncStatus.shared
+    private var tips = TipJar.shared
     /// Shown only in Xcode and TestFlight builds.
     @State private var isTestBuild = false
     @State private var isSavingLog = false
@@ -56,6 +57,33 @@ struct AboutView: View {
                     }
                 }
 
+                if !tips.products.isEmpty {
+                    Section {
+                        ForEach(tips.products, id: \.id) { product in
+                            Button {
+                                Task { await tips.buy(product) }
+                            } label: {
+                                LabeledContent {
+                                    Text(product.displayPrice)
+                                } label: {
+                                    Label(product.displayName, systemImage: "heart")
+                                }
+                            }
+                            .disabled(tips.isBuying)
+                        }
+                        if let message = tips.message {
+                            Text(message)
+                                .font(.appFootnote)
+                                .foregroundStyle(.secondary)
+                        }
+                    } header: {
+                        Text("Tip jar")
+                    } footer: {
+                        Text("Optional. Tips support the app and unlock nothing.")
+                            .font(.appFootnote)
+                    }
+                }
+
                 Section("iCloud sync") {
                     LabeledContent("Storage", value: sync.storage)
                     LabeledContent("iCloud account", value: sync.account)
@@ -92,6 +120,7 @@ struct AboutView: View {
                 await sync.checkAccount()
                 isTestBuild = await AppLog.isTestBuild()
             }
+            .task { await tips.start() }
             .fileExporter(
                 isPresented: $isSavingLog,
                 document: logFile,

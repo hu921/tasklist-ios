@@ -5,6 +5,8 @@ import SwiftData
 struct SimpleTasksApp: App {
     init() {
         AppFont.register()
+        // Finishes any tip paid while the app was closed.
+        Task { await TipJar.shared.start() }
     }
 
     let container: ModelContainer = {
