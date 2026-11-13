@@ -78,7 +78,11 @@ final class SyncStatus {
         }
         if event.succeeded {
             let time = end.formatted(date: .omitted, time: .shortened)
-            update { $0.lastSync = "\(kind) OK at \(time)" }
+            update {
+                $0.lastSync = "\(kind) OK at \(time)"
+                // A later success clears an earlier failure of the same kind.
+                if $0.lastError?.hasPrefix("\(kind):") == true { $0.lastError = nil }
+            }
         } else {
             let text = event.error.map(Self.describe) ?? "Unknown error"
             update { $0.lastError = "\(kind): \(text)" }
