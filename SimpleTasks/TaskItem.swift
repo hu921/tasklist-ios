@@ -26,6 +26,9 @@ final class TaskItem {
 
     var period: Period { Period(rawValue: periodRaw) ?? .daily }
 
+    /// True when the task has no text.
+    var isBlank: Bool { title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+
     /// Position in its list: the order tasks were added or moved in.
     var listOrder: Date { movedAt ?? createdAt }
 
