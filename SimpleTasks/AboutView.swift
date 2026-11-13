@@ -21,7 +21,7 @@ struct AboutView: View {
                             .foregroundStyle(.tint)
                         Text("Simple Todo")
                             .font(.appTitle)
-                        Text("A simple daily, weekly, and monthly to-do list.")
+                        Text(L("A simple daily, weekly, and monthly to-do list."))
                             .font(.appFootnote)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -31,17 +31,17 @@ struct AboutView: View {
                 }
 
                 Section {
-                    LabeledContent("Version", value: AppInfo.version)
+                    LabeledContent(L("Version"), value: AppInfo.version)
                     if let name = AppInfo.developerName {
-                        LabeledContent("Developer", value: name)
+                        LabeledContent(L("Developer"), value: name)
                     }
                     if let mail = AppInfo.contactMailURL {
-                        LabeledContent("Contact") {
+                        LabeledContent(L("Contact")) {
                             Link(AppInfo.supportEmail, destination: mail)
                         }
                     }
                     if let website = AppInfo.website {
-                        LabeledContent("Website") {
+                        LabeledContent(L("Website")) {
                             Link(website.host() ?? website.absoluteString, destination: website)
                         }
                     }
@@ -51,10 +51,10 @@ struct AboutView: View {
                     Button {
                         isWishing = true
                     } label: {
-                        Label("Send a wish", systemImage: "sparkles")
+                        Label(L("Send a wish"), systemImage: "sparkles")
                     }
                 } footer: {
-                    Text("Share an idea or a problem, right here in the app.")
+                    Text(L("Share an idea or a problem, right here in the app."))
                         .font(.appFootnote)
                 }
 
@@ -73,22 +73,24 @@ struct AboutView: View {
                             .disabled(tips.isBuying)
                         }
                         if let message = tips.message {
-                            Text(message)
+                            Text(L(message))
                                 .font(.appFootnote)
                                 .foregroundStyle(.secondary)
                         }
                     } header: {
-                        Text("Tip jar")
+                        Text(L("Tip jar"))
                     } footer: {
-                        Text("Optional. Tips support the app and unlock nothing.")
+                        Text(L("Optional. Tips support the app and unlock nothing."))
                             .font(.appFootnote)
                     }
                 }
 
-                Section("iCloud sync") {
-                    LabeledContent("Storage", value: sync.storage)
-                    LabeledContent("iCloud account", value: sync.account)
-                    LabeledContent("Last sync", value: sync.lastSync)
+                AppearanceSection()
+
+                Section(L("iCloud sync")) {
+                    LabeledContent(L("Storage"), value: L(sync.storage))
+                    LabeledContent(L("iCloud account"), value: L(sync.account))
+                    LabeledContent(L("Last sync"), value: sync.lastSyncText)
                     if let error = sync.lastError {
                         Text(error)
                             .font(.appFootnote)
@@ -100,18 +102,18 @@ struct AboutView: View {
                 if isTestBuild {
                     Section {
                         ShareLink(item: AppLog.fileURL) {
-                            Label("Share log", systemImage: "square.and.arrow.up")
+                            Label(L("Share log"), systemImage: "square.and.arrow.up")
                         }
                         Button {
                             logFile = LogDocument(data: (try? Data(contentsOf: AppLog.fileURL)) ?? Data())
                             isSavingLog = true
                         } label: {
-                            Label("Save log to file…", systemImage: "square.and.arrow.down")
+                            Label(L("Save log to file…"), systemImage: "square.and.arrow.down")
                         }
                     } header: {
-                        Text("Testing")
+                        Text(L("Testing"))
                     } footer: {
-                        Text("Actions, sync, and errors only. No task text. Test builds only.")
+                        Text(L("Actions, sync, and errors only. No task text. Test builds only."))
                             .font(.appFootnote)
                     }
                 }
@@ -138,16 +140,48 @@ struct AboutView: View {
             ) { result in
                 if case .failure(let error) = result { AppLog.error("save log failed", error) }
             }
-            .navigationTitle("About")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                    Button(L("Done")) { dismiss() }
                 }
             }
         }
+        .preferredColorScheme(AppSettings.shared.theme.colorScheme)
         #if os(macOS)
         .frame(minWidth: 360, minHeight: 380)
         #endif
+    }
+}
+
+/// Theme, font, font size, and language.
+private struct AppearanceSection: View {
+    @Bindable private var settings = AppSettings.shared
+
+    var body: some View {
+        Section(L("Appearance")) {
+            Picker(L("Theme"), selection: $settings.theme) {
+                ForEach(AppSettings.Theme.allCases) { Text($0.name).tag($0) }
+            }
+            Picker(L("Font"), selection: $settings.fontFamily) {
+                ForEach(AppSettings.FontFamily.allCases) { family in
+                    Text(family.name).tag(family)
+                }
+            }
+            Picker(L("Font size"), selection: $settings.fontSize) {
+                ForEach(AppSettings.FontSize.allCases) { Text($0.name).tag($0) }
+            }
+            if settings.fontSize == .custom {
+                HStack(spacing: 12) {
+                    Text("A").font(.system(size: 13))
+                    Slider(value: $settings.fontScale, in: AppSettings.scaleRange, step: 0.1)
+                        .accessibilityLabel(L("Font size"))
+                    Text("A").font(.system(size: 22))
+                }
+            }
+            Picker(L("Language"), selection: $settings.language) {
+                ForEach(AppSettings.Language.allCases) { Text($0.name).tag($0) }
+            }
+        }
     }
 }
 

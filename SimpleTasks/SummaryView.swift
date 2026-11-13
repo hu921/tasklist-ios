@@ -59,9 +59,9 @@ struct SummaryView: View {
                     .font(.system(size: 36))
                     .foregroundStyle(.yellow)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("\(totalDone) tasks done")
+                    Text(L("%lld tasks done", totalDone))
                         .font(.appTitle)
-                    Text("\(perfectWeeks) \(perfectWeeks == 1 ? "week" : "weeks") with everything done")
+                    Text(perfectWeeks == 1 ? L("1 week with everything done") : L("%lld weeks with everything done", perfectWeeks))
                         .font(.appFootnote)
                         .foregroundStyle(.secondary)
                 }
@@ -69,13 +69,13 @@ struct SummaryView: View {
             .padding(.vertical, 8)
 
             if weeks.isEmpty {
-                Text("No tasks yet.")
+                Text(L("No tasks yet."))
                     .foregroundStyle(.secondary)
             } else {
                 Section {
                     ForEach(weeks) { WeekRow(stat: $0) }
                 } header: {
-                    Text("By week").font(.appFootnote)
+                    Text(L("By week")).font(.appFootnote)
                 }
             }
         }
@@ -95,14 +95,14 @@ private struct WeekRow: View {
                 if stat.notDone == 0 {
                     Image(systemName: "star.fill")
                         .foregroundStyle(.yellow)
-                        .accessibilityLabel("Everything done")
+                        .accessibilityLabel(L("Everything done"))
                 }
             }
             ProgressView(value: Double(stat.done), total: Double(max(stat.total, 1)))
             HStack {
-                Text("\(stat.done) done")
+                Text(L("%lld done", stat.done))
                 Spacer()
-                Text("\(stat.notDone) not done")
+                Text(L("%lld not done", stat.notDone))
                     .foregroundStyle(.secondary)
             }
             .font(.appFootnote)

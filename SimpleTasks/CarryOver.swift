@@ -19,7 +19,8 @@ enum CarryOver {
         }
         for task in openTasks where !task.isBlank {
             let current = task.period.start(of: now)
-            if task.periodStart < current {
+            // Compare pages, so a task saved in another time zone is not moved by mistake.
+            if task.period.page(of: task.periodStart) < current {
                 task.periodStart = current
                 carried += 1
             }

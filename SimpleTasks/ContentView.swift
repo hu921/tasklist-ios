@@ -10,10 +10,10 @@ enum AppTab: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .daily: "Daily"
-        case .weekly: "Weekly"
-        case .monthly: "Monthly"
-        case .summary: "Summary"
+        case .daily: L("Daily")
+        case .weekly: L("Weekly")
+        case .monthly: L("Monthly")
+        case .summary: L("Summary")
         }
     }
 
@@ -67,9 +67,9 @@ struct ContentView: View {
                     Button {
                         showsAbout = true
                     } label: {
-                        Image(systemName: "info.circle")
+                        Image(systemName: "gearshape")
                     }
-                    .accessibilityLabel("About")
+                    .accessibilityLabel(L("Settings"))
                 }
             }
             .sheet(isPresented: $showsAbout) {
@@ -77,6 +77,7 @@ struct ContentView: View {
             }
         }
         .font(.appBody)
+        .preferredColorScheme(AppSettings.shared.theme.colorScheme)
         .onChange(of: tab) { offset = 0 }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { refresh() }
@@ -85,6 +86,14 @@ struct ContentView: View {
             NotificationCenter.default.publisher(for: .NSCalendarDayChanged)
                 .receive(on: DispatchQueue.main)
         ) { _ in refresh() }
+        // Travel: the device's time zone changed, so "today" may have changed.
+        .onReceive(
+            NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)
+                .receive(on: DispatchQueue.main)
+        ) { _ in
+            AppLog.log("time zone changed", TimeZone.current.identifier)
+            refresh()
+        }
         .task { refresh() }
     }
 
@@ -98,7 +107,7 @@ struct ContentView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel("Previous")
+            .accessibilityLabel(L("Previous"))
 
             Spacer()
 
@@ -122,13 +131,15 @@ struct ContentView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel("Next")
+            .accessibilityLabel(L("Next"))
         }
         .padding(.horizontal, 4)
         .padding(.vertical, 4)
     }
 
     private func refresh() {
+        // Always use the device's current time zone.
+        NSTimeZone.resetSystemTimeZone()
         now = .now
         CarryOver.run(in: context, now: now)
     }
@@ -180,18 +191,25 @@ struct TaskPage: View {
         self.period = period
         self.start = start
         let raw = period.rawValue
-        let end = period.shift(start, by: 1)
+        // A little wider than the page, to include tasks saved in another time zone.
+        // `sortedTasks` keeps only the ones that belong to this page.
+        let from = start.addingTimeInterval(-13 * 3600)
+        let to = period.shift(start, by: 1).addingTimeInterval(13 * 3600)
         _tasks = Query(
             filter: #Predicate<TaskItem> {
-                $0.periodRaw == raw && $0.periodStart >= start && $0.periodStart < end
+                $0.periodRaw == raw && $0.periodStart >= from && $0.periodStart < to
             },
             sort: [SortDescriptor(\TaskItem.createdAt)]
         )
     }
 
     /// Urgent tasks first, then the rest, each in the order they were added or moved here.
+    private var pageTasks: [TaskItem] {
+        tasks.filter { period.page(of: $0.periodStart) == start }
+    }
+
     private var sortedTasks: [TaskItem] {
-        let ordered = tasks.sorted { $0.listOrder < $1.listOrder }
+        let ordered = pageTasks.sorted { $0.listOrder < $1.listOrder }
         return ordered.filter(\.isUrgent) + ordered.filter { !$0.isUrgent }
     }
 
@@ -202,12 +220,12 @@ struct TaskPage: View {
                 TaskRow(task: task, showsFlag: period == .daily)
                     .contextMenu {
                         ForEach(Period.allCases.filter { $0 != period }) { target in
-                            Button("Move to \(target.title)", systemImage: "arrow.right") {
+                            Button(L("Move to %@", target.title), systemImage: "arrow.right") {
                                 task.move(to: target)
                             }
                         }
                         Divider()
-                        Button("Delete", systemImage: "trash", role: .destructive) {
+                        Button(L("Delete"), systemImage: "trash", role: .destructive) {
                             AppLog.log("task deleted", period.rawValue)
                             context.delete(task)
                         }
@@ -225,15 +243,15 @@ struct TaskPage: View {
                     .font(.title3)
                     .foregroundStyle(.secondary)
                     .frame(width: 28)
-                TextField("Add a task", text: $newTitle)
+                TextField(L("Add a task"), text: $newTitle)
                     .focused($isAdding)
                     .submitLabel(.done)
                     .onSubmit(addTask)
             }
 
-            if !tasks.isEmpty {
-                let done = tasks.filter(\.isDone).count
-                Text("\(done) of \(tasks.count) done")
+            if !rows.isEmpty {
+                let done = rows.filter(\.isDone).count
+                Text(L("%lld of %lld done", done, rows.count))
                     .font(.appFootnote)
                     .foregroundStyle(.secondary)
                     .listRowSeparator(.hidden)
@@ -277,10 +295,10 @@ struct TaskRow: View {
                     .frame(width: 28)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(task.isDone ? "Mark not done" : "Mark done")
+            .accessibilityLabel(task.isDone ? L("Mark not done") : L("Mark done"))
 
             if isEditing {
-                TextField("Task", text: $task.title, axis: .vertical)
+                TextField(L("Task"), text: $task.title, axis: .vertical)
                     .focused($isFocused)
                     .submitLabel(.done)
                     .strikethrough(task.isDone)
@@ -320,7 +338,7 @@ struct TaskRow: View {
                         .foregroundStyle(task.isUrgent ? AnyShapeStyle(.red) : AnyShapeStyle(.tertiary))
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(task.isUrgent ? "Remove urgent flag" : "Mark urgent")
+                .accessibilityLabel(task.isUrgent ? L("Remove urgent flag") : L("Mark urgent"))
             }
         }
     }

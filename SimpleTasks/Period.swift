@@ -8,17 +8,17 @@ enum Period: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .daily: "Daily"
-        case .weekly: "Weekly"
-        case .monthly: "Monthly"
+        case .daily: L("Daily")
+        case .weekly: L("Weekly")
+        case .monthly: L("Monthly")
         }
     }
 
     var currentLabel: String {
         switch self {
-        case .daily: "Today"
-        case .weekly: "This Week"
-        case .monthly: "This Month"
+        case .daily: L("Today")
+        case .weekly: L("This Week")
+        case .monthly: L("This Month")
         }
     }
 
@@ -41,6 +41,14 @@ enum Period: String, CaseIterable, Identifiable {
         }
     }
 
+    /// The page a saved task belongs to, in the device's current time zone.
+    /// A task saved in another time zone (travel, or another device) has a
+    /// start that is a few hours off the local midnight; this rounds it to
+    /// the page it was meant for.
+    func page(of savedStart: Date, calendar: Calendar = .current) -> Date {
+        start(of: savedStart.addingTimeInterval(12 * 3600), calendar: calendar)
+    }
+
     /// Start of the page `value` pages away from `start`.
     func shift(_ start: Date, by value: Int, calendar: Calendar = .current) -> Date {
         let moved = calendar.date(byAdding: component, value: value, to: start) ?? start
@@ -49,13 +57,14 @@ enum Period: String, CaseIterable, Identifiable {
 
     /// Page heading, e.g. "Wednesday, November 11", "Week of Nov 9", "November 2026".
     func label(for start: Date) -> String {
+        let locale = AppSettings.shared.locale
         switch self {
         case .daily:
-            return start.formatted(.dateTime.weekday(.wide).month(.wide).day())
+            return start.formatted(.dateTime.weekday(.wide).month(.wide).day().locale(locale))
         case .weekly:
-            return "Week of " + start.formatted(.dateTime.month(.abbreviated).day())
+            return L("Week of %@", start.formatted(.dateTime.month(.abbreviated).day().locale(locale)))
         case .monthly:
-            return start.formatted(.dateTime.month(.wide).year())
+            return start.formatted(.dateTime.month(.wide).year().locale(locale))
         }
     }
 }

@@ -13,7 +13,9 @@ final class SyncStatus {
     /// "iCloud" or "This device only".
     var storage = "Starting…"
     var account = "Checking…"
-    var lastSync = "Not yet"
+    /// Kind ("Setup", "Download", "Upload") and time of the last successful sync.
+    var lastSyncKind: String?
+    var lastSyncDate: Date?
     /// The most recent error, in words, if any.
     var lastError: String?
 
@@ -82,9 +84,9 @@ final class SyncStatus {
         let duration = "\(Int(end.timeIntervalSince(event.startDate) * 1000)) ms"
         if event.succeeded {
             AppLog.log("sync \(kind.lowercased()) ok", duration)
-            let time = end.formatted(date: .omitted, time: .shortened)
             update {
-                $0.lastSync = "\(kind) OK at \(time)"
+                $0.lastSyncKind = kind
+                $0.lastSyncDate = end
                 // A later success clears an earlier failure of the same kind.
                 if $0.lastError?.hasPrefix("\(kind):") == true { $0.lastError = nil }
             }
@@ -94,6 +96,13 @@ final class SyncStatus {
             log.error("\(kind, privacy: .public) failed: \(text, privacy: .public)")
             AppLog.log("sync \(kind.lowercased()) failed", "\(duration), \(text)")
         }
+    }
+
+    /// Shown on the Settings page, in the chosen language.
+    var lastSyncText: String {
+        guard let kind = lastSyncKind, let date = lastSyncDate else { return L("Not yet") }
+        let time = date.formatted(Date.FormatStyle(date: .omitted, time: .shortened).locale(AppSettings.shared.locale))
+        return L("%@ OK at %@", L(kind), time)
     }
 
     private func update(_ change: @escaping (SyncStatus) -> Void) {
