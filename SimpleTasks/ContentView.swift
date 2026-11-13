@@ -10,10 +10,10 @@ enum AppTab: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .daily: "Daily"
-        case .weekly: "Weekly"
-        case .monthly: "Monthly"
-        case .summary: "Summary"
+        case .daily: L("Daily")
+        case .weekly: L("Weekly")
+        case .monthly: L("Monthly")
+        case .summary: L("Summary")
         }
     }
 
@@ -67,9 +67,9 @@ struct ContentView: View {
                     Button {
                         showsAbout = true
                     } label: {
-                        Image(systemName: "info.circle")
+                        Image(systemName: "gearshape")
                     }
-                    .accessibilityLabel("About")
+                    .accessibilityLabel(L("Settings"))
                 }
             }
             .sheet(isPresented: $showsAbout) {
@@ -77,6 +77,7 @@ struct ContentView: View {
             }
         }
         .font(.appBody)
+        .preferredColorScheme(AppSettings.shared.theme.colorScheme)
         .onChange(of: tab) { offset = 0 }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { refresh() }
@@ -98,7 +99,7 @@ struct ContentView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel("Previous")
+            .accessibilityLabel(L("Previous"))
 
             Spacer()
 
@@ -122,7 +123,7 @@ struct ContentView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.borderless)
-            .accessibilityLabel("Next")
+            .accessibilityLabel(L("Next"))
         }
         .padding(.horizontal, 4)
         .padding(.vertical, 4)
@@ -202,12 +203,12 @@ struct TaskPage: View {
                 TaskRow(task: task, showsFlag: period == .daily)
                     .contextMenu {
                         ForEach(Period.allCases.filter { $0 != period }) { target in
-                            Button("Move to \(target.title)", systemImage: "arrow.right") {
+                            Button(L("Move to %@", target.title), systemImage: "arrow.right") {
                                 task.move(to: target)
                             }
                         }
                         Divider()
-                        Button("Delete", systemImage: "trash", role: .destructive) {
+                        Button(L("Delete"), systemImage: "trash", role: .destructive) {
                             AppLog.log("task deleted", period.rawValue)
                             context.delete(task)
                         }
@@ -225,7 +226,7 @@ struct TaskPage: View {
                     .font(.title3)
                     .foregroundStyle(.secondary)
                     .frame(width: 28)
-                TextField("Add a task", text: $newTitle)
+                TextField(L("Add a task"), text: $newTitle)
                     .focused($isAdding)
                     .submitLabel(.done)
                     .onSubmit(addTask)
@@ -233,7 +234,7 @@ struct TaskPage: View {
 
             if !tasks.isEmpty {
                 let done = tasks.filter(\.isDone).count
-                Text("\(done) of \(tasks.count) done")
+                Text(L("%lld of %lld done", done, tasks.count))
                     .font(.appFootnote)
                     .foregroundStyle(.secondary)
                     .listRowSeparator(.hidden)
@@ -277,10 +278,10 @@ struct TaskRow: View {
                     .frame(width: 28)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(task.isDone ? "Mark not done" : "Mark done")
+            .accessibilityLabel(task.isDone ? L("Mark not done") : L("Mark done"))
 
             if isEditing {
-                TextField("Task", text: $task.title, axis: .vertical)
+                TextField(L("Task"), text: $task.title, axis: .vertical)
                     .focused($isFocused)
                     .submitLabel(.done)
                     .strikethrough(task.isDone)
@@ -320,7 +321,7 @@ struct TaskRow: View {
                         .foregroundStyle(task.isUrgent ? AnyShapeStyle(.red) : AnyShapeStyle(.tertiary))
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(task.isUrgent ? "Remove urgent flag" : "Mark urgent")
+                .accessibilityLabel(task.isUrgent ? L("Remove urgent flag") : L("Mark urgent"))
             }
         }
     }

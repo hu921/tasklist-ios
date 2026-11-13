@@ -1,9 +1,9 @@
 import SwiftUI
 import CoreText
 
-/// Roboto, bundled in the Fonts folder. Sizes match the system text styles.
+/// Bundled fonts (Roboto, Lato, Open Sans) in the Fonts folder.
 enum AppFont {
-    /// Registers the bundled Roboto files. Call once at launch.
+    /// Registers the bundled font files. Call once at launch.
     static func register() {
         let urls = Bundle.main.urls(forResourcesWithExtension: "ttf", subdirectory: nil) ?? []
         for url in urls {
@@ -11,9 +11,29 @@ enum AppFont {
         }
     }
 
-    static let regular = "Roboto-Regular"
-    static let medium = "Roboto-Medium"
-    static let bold = "Roboto-Bold"
+    enum Weight { case regular, medium, bold }
+
+    /// A font in the chosen family and size. Sizes match the system text styles.
+    static func make(_ weight: Weight, size: CGFloat, style: Font.TextStyle) -> Font {
+        let settings = AppSettings.shared
+        let custom = settings.fontSize == .custom
+        let points = custom ? size * settings.fontScale : size
+
+        guard let faces = settings.fontFamily.faces else {
+            let w: Font.Weight = switch weight {
+            case .regular: .regular
+            case .medium: .medium
+            case .bold: .bold
+            }
+            return custom ? .system(size: points, weight: w) : .system(style, weight: w)
+        }
+        let name = switch weight {
+        case .regular: faces.regular
+        case .medium: faces.medium
+        case .bold: faces.bold
+        }
+        return custom ? .custom(name, fixedSize: points) : .custom(name, size: points, relativeTo: style)
+    }
 }
 
 extension Font {
@@ -31,10 +51,11 @@ extension Font {
     private static let titleSize: CGFloat = 28
     #endif
 
-    static let appBody = Font.custom(AppFont.regular, size: bodySize, relativeTo: .body)
-    static let appHeadline = Font.custom(AppFont.medium, size: bodySize, relativeTo: .headline)
-    static let appTab = Font.custom(AppFont.medium, size: subheadlineSize, relativeTo: .subheadline)
-    static let appFootnote = Font.custom(AppFont.regular, size: footnoteSize, relativeTo: .footnote)
-    static let appCaption = Font.custom(AppFont.regular, size: captionSize, relativeTo: .caption)
-    static let appTitle = Font.custom(AppFont.bold, size: titleSize, relativeTo: .title)
+    // Computed each time, so a change on the Settings page shows right away.
+    static var appBody: Font { AppFont.make(.regular, size: bodySize, style: .body) }
+    static var appHeadline: Font { AppFont.make(.medium, size: bodySize, style: .headline) }
+    static var appTab: Font { AppFont.make(.medium, size: subheadlineSize, style: .subheadline) }
+    static var appFootnote: Font { AppFont.make(.regular, size: footnoteSize, style: .footnote) }
+    static var appCaption: Font { AppFont.make(.regular, size: captionSize, style: .caption) }
+    static var appTitle: Font { AppFont.make(.bold, size: titleSize, style: .title) }
 }

@@ -21,7 +21,7 @@ struct WishFormView: View {
             Form {
                 if sent {
                     Section {
-                        Label("Thank you! We read every wish.", systemImage: "sparkles")
+                        Label(L("Thank you! We read every wish."), systemImage: "sparkles")
                     }
                 } else {
                     Section {
@@ -32,9 +32,9 @@ struct WishFormView: View {
                                 if new.count > Self.maxLength { text = String(new.prefix(Self.maxLength)) }
                             }
                     } header: {
-                        Text("Your wish")
+                        Text(L("Your wish"))
                     } footer: {
-                        Text("An idea, a problem, or a feature you'd like. We read every wish. Only this text and the app version are sent.")
+                        Text(L("An idea, a problem, or a feature you'd like. We read every wish. Only this text and the app version are sent."))
                             .font(.appFootnote)
                     }
                     if let errorText {
@@ -45,21 +45,21 @@ struct WishFormView: View {
                 }
             }
             .font(.appBody)
-            .navigationTitle(sent ? "Wish sent" : "Send a wish")
+            .navigationTitle(sent ? L("Wish sent") : L("Send a wish"))
             .toolbar {
                 if sent {
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") { dismiss() }
+                        Button(L("Done")) { dismiss() }
                     }
                 } else {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { dismiss() }
+                        Button(L("Cancel")) { dismiss() }
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         if isSending {
                             ProgressView()
                         } else {
-                            Button("Send") { Task { await send() } }
+                            Button(L("Send")) { Task { await send() } }
                                 .disabled(trimmed.isEmpty)
                         }
                     }
@@ -67,6 +67,7 @@ struct WishFormView: View {
             }
             .onAppear { isFocused = true }
         }
+        .preferredColorScheme(AppSettings.shared.theme.colorScheme)
         #if os(macOS)
         .frame(minWidth: 380, minHeight: 320)
         #endif
@@ -87,9 +88,9 @@ struct WishFormView: View {
         } catch {
             let ns = error as NSError
             if ns.domain == CKError.errorDomain, ns.code == CKError.notAuthenticated.rawValue {
-                errorText = "Please sign in to iCloud in Settings to send a wish."
+                errorText = L("Please sign in to iCloud in Settings to send a wish.")
             } else {
-                errorText = "Could not send. Please check your internet and try again."
+                errorText = L("Could not send. Please check your internet and try again.")
             }
             AppLog.error("wish failed", error)
         }
