@@ -10,7 +10,12 @@ enum CarryOver {
         guard let openTasks = try? context.fetch(descriptor) else { return }
 
         var changed = false
-        for task in openTasks {
+        for task in openTasks where task.isBlank {
+            // A task whose text was erased is removed.
+            context.delete(task)
+            changed = true
+        }
+        for task in openTasks where !task.isBlank {
             let current = task.period.start(of: now)
             if task.periodStart < current {
                 task.periodStart = current

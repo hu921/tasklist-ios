@@ -257,6 +257,7 @@ struct TaskPage: View {
 struct TaskRow: View {
     @Bindable var task: TaskItem
     var showsFlag = false
+    @Environment(\.modelContext) private var context
     /// The title shows as plain text, so a long-press (right-click on Mac)
     /// opens the task's Move/Delete menu. Tapping it switches to editing.
     @State private var isEditing = false
@@ -281,7 +282,10 @@ struct TaskRow: View {
                     .foregroundStyle(task.isDone ? .secondary : .primary)
                     .onAppear { isFocused = true }
                     .onChange(of: isFocused) { _, focused in
-                        if !focused { isEditing = false }
+                        guard !focused else { return }
+                        isEditing = false
+                        // Erasing all the text removes the task.
+                        if task.isBlank { context.delete(task) }
                     }
                     .onChange(of: task.title) { _, title in
                         // Return finishes editing instead of starting a new line.
