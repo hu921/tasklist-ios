@@ -36,6 +36,9 @@ struct ContentView: View {
     @State private var offset = 0
     @State private var now = Date.now
     @State private var showsAbout = false
+    #if os(macOS)
+    @Environment(\.openWindow) private var openWindow
+    #endif
 
     var body: some View {
         NavigationStack {
@@ -68,10 +71,16 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
+                        #if os(macOS)
+                        // On Mac, Settings opens in its own window you can resize.
+                        openWindow(id: SimpleTasksApp.settingsWindowID)
+                        #else
                         showsAbout = true
+                        #endif
                     } label: {
                         Image(systemName: "gearshape")
                     }
+                    .keyboardShortcut(",", modifiers: .command)
                     .accessibilityLabel(L("Settings"))
                 }
             }

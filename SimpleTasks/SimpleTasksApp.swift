@@ -38,5 +38,14 @@ struct SimpleTasksApp: App {
         #if os(macOS)
         .defaultSize(width: 420, height: 640)
         #endif
+
+        #if os(macOS)
+        Window(Text(L("Settings")), id: Self.settingsWindowID) {
+            AboutView()
+        }
+        .defaultSize(width: 440, height: 680)
+        #endif
     }
+
+    static let settingsWindowID = "settings"
 }
