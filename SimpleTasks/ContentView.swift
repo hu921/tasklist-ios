@@ -257,7 +257,10 @@ struct TaskPage: View {
 struct TaskRow: View {
     @Bindable var task: TaskItem
     var showsFlag = false
-    @FocusState private var isEditing: Bool
+    /// The title shows as plain text, so a long-press (right-click on Mac)
+    /// opens the task's Move/Delete menu. Tapping it switches to editing.
+    @State private var isEditing = false
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         HStack(spacing: 12) {
@@ -270,17 +273,30 @@ struct TaskRow: View {
             .buttonStyle(.plain)
             .accessibilityLabel(task.isDone ? "Mark not done" : "Mark done")
 
-            TextField("Task", text: $task.title, axis: .vertical)
-                .focused($isEditing)
-                .submitLabel(.done)
-                .strikethrough(task.isDone)
-                .foregroundStyle(task.isDone ? .secondary : .primary)
-                .onChange(of: task.title) { _, title in
-                    // Return finishes editing instead of starting a new line.
-                    guard title.contains("\n") else { return }
-                    task.title = title.replacingOccurrences(of: "\n", with: "")
-                    isEditing = false
-                }
+            if isEditing {
+                TextField("Task", text: $task.title, axis: .vertical)
+                    .focused($isFocused)
+                    .submitLabel(.done)
+                    .strikethrough(task.isDone)
+                    .foregroundStyle(task.isDone ? .secondary : .primary)
+                    .onAppear { isFocused = true }
+                    .onChange(of: isFocused) { _, focused in
+                        if !focused { isEditing = false }
+                    }
+                    .onChange(of: task.title) { _, title in
+                        // Return finishes editing instead of starting a new line.
+                        guard title.contains("\n") else { return }
+                        task.title = title.replacingOccurrences(of: "\n", with: "")
+                        isFocused = false
+                    }
+            } else {
+                Text(task.title.isEmpty ? " " : task.title)
+                    .strikethrough(task.isDone)
+                    .foregroundStyle(task.isDone ? .secondary : .primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+                    .onTapGesture { isEditing = true }
+            }
 
             if showsFlag {
                 Button {
