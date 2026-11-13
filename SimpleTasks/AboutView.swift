@@ -159,15 +159,15 @@ private struct AppearanceSection: View {
 
     var body: some View {
         Section(L("Appearance")) {
-            Picker(L("Theme"), selection: $settings.theme) {
+            SettingPicker(L("Theme"), selection: $settings.theme) {
                 ForEach(AppSettings.Theme.allCases) { Text($0.name).tag($0) }
             }
-            Picker(L("Font"), selection: $settings.fontFamily) {
+            SettingPicker(L("Font"), selection: $settings.fontFamily) {
                 ForEach(AppSettings.FontFamily.allCases) { family in
                     Text(family.name).tag(family)
                 }
             }
-            Picker(L("Font size"), selection: $settings.fontSize) {
+            SettingPicker(L("Font size"), selection: $settings.fontSize) {
                 ForEach(AppSettings.FontSize.allCases) { Text($0.name).tag($0) }
             }
             if settings.fontSize == .custom {
@@ -178,7 +178,7 @@ private struct AppearanceSection: View {
                     Text("A").font(.system(size: 22))
                 }
             }
-            Picker(L("Language"), selection: $settings.language) {
+            SettingPicker(L("Language"), selection: $settings.language) {
                 ForEach(AppSettings.Language.allCases) { Text($0.name).tag($0) }
             }
         }
@@ -202,5 +202,30 @@ struct LogDocument: FileDocument {
 
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         FileWrapper(regularFileWithContents: data)
+    }
+}
+
+/// A setting row whose menu button has the same width on every row (Mac).
+private struct SettingPicker<Value: Hashable, Options: View>: View {
+    let title: String
+    @Binding var selection: Value
+    @ViewBuilder let options: () -> Options
+
+    init(_ title: String, selection: Binding<Value>, @ViewBuilder options: @escaping () -> Options) {
+        self.title = title
+        self._selection = selection
+        self.options = options
+    }
+
+    var body: some View {
+        #if os(macOS)
+        LabeledContent(title) {
+            Picker(title, selection: $selection, content: options)
+                .labelsHidden()
+                .frame(width: 170)
+        }
+        #else
+        Picker(title, selection: $selection, content: options)
+        #endif
     }
 }
