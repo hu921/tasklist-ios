@@ -29,6 +29,9 @@ enum AppInfo {
         return parts.url
     }
 
+    /// The year shown in the About copyright line.
+    static let copyrightYear = "2026"
+
     static var version: String {
         let info = Bundle.main.infoDictionary
         let short = info?["CFBundleShortVersionString"] as? String ?? "1.0"

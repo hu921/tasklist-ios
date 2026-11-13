@@ -115,6 +115,13 @@ struct AboutView: View {
                             .font(.appFootnote)
                     }
                 }
+
+                Section {
+                } footer: {
+                    Text("© \(AppInfo.copyrightYear) Simple Todo by Journipod")
+                        .font(.appFootnote)
+                        .frame(maxWidth: .infinity)
+                }
             }
             .font(.appBody)
             .task {
