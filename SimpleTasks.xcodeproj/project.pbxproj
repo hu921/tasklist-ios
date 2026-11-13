@@ -22,6 +22,7 @@
 		C5E0068240B20AA2FDA0BEE8 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 912E5D95F305423BC87E9393 /* Roboto-Bold.ttf */; };
 		CCD10D626797F600200243EC /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BCD231113F7D21B658408E /* AppInfo.swift */; };
 		F2F45AECD401D7234A597AB8 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 140BDAB94194CFAEB8672077 /* Roboto-Regular.ttf */; };
+		FBE81345ED5B59D7204A76FE /* TipJar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5404914D6BFE67CBF1EB1982 /* TipJar.swift */; };
 		FDF45444CCD39CBCC4BAE3E3 /* SyncStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738E2BAE7FCD10C8F54D7ADA /* SyncStatus.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		350513A0F55E20D2BFDE6893 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		39129EF1956F3FF2949D5816 /* SimpleTasks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleTasks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FD31486B10356724DA164F1 /* AboutView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		5404914D6BFE67CBF1EB1982 /* TipJar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TipJar.swift; sourceTree = "<group>"; };
 		738E2BAE7FCD10C8F54D7ADA /* SyncStatus.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SyncStatus.swift; sourceTree = "<group>"; };
 		7C18AF2FB8BD88F0BB06316F /* SummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		89099B1032D69E84FA1E6B49 /* Period.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Period.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				738E2BAE7FCD10C8F54D7ADA /* SyncStatus.swift */,
 				9062E6886FB779FDA130B9A5 /* AppLog.swift */,
 				DC29A1FAF28B1D5F20FBEC3A /* PrivacyInfo.xcprivacy */,
+				5404914D6BFE67CBF1EB1982 /* TipJar.swift */,
 			);
 			name = SimpleTasks;
 			path = SimpleTasks;
@@ -207,6 +210,7 @@
 				AB564FC4AAF2B32C337B7689 /* SummaryView.swift in Sources */,
 				FDF45444CCD39CBCC4BAE3E3 /* SyncStatus.swift in Sources */,
 				B147F15E5C02CB1EAB961D4C /* AppLog.swift in Sources */,
+				FBE81345ED5B59D7204A76FE /* TipJar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,7 +226,7 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleTasks/SimpleTasks.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -331,7 +335,7 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleTasks/SimpleTasks.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
