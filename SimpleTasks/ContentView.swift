@@ -86,6 +86,14 @@ struct ContentView: View {
             NotificationCenter.default.publisher(for: .NSCalendarDayChanged)
                 .receive(on: DispatchQueue.main)
         ) { _ in refresh() }
+        // Travel: the device's time zone changed, so "today" may have changed.
+        .onReceive(
+            NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)
+                .receive(on: DispatchQueue.main)
+        ) { _ in
+            AppLog.log("time zone changed", TimeZone.current.identifier)
+            refresh()
+        }
         .task { refresh() }
     }
 
@@ -130,6 +138,8 @@ struct ContentView: View {
     }
 
     private func refresh() {
+        // Always use the device's current time zone.
+        NSTimeZone.resetSystemTimeZone()
         now = .now
         CarryOver.run(in: context, now: now)
     }
@@ -181,18 +191,25 @@ struct TaskPage: View {
         self.period = period
         self.start = start
         let raw = period.rawValue
-        let end = period.shift(start, by: 1)
+        // A little wider than the page, to include tasks saved in another time zone.
+        // `sortedTasks` keeps only the ones that belong to this page.
+        let from = start.addingTimeInterval(-13 * 3600)
+        let to = period.shift(start, by: 1).addingTimeInterval(13 * 3600)
         _tasks = Query(
             filter: #Predicate<TaskItem> {
-                $0.periodRaw == raw && $0.periodStart >= start && $0.periodStart < end
+                $0.periodRaw == raw && $0.periodStart >= from && $0.periodStart < to
             },
             sort: [SortDescriptor(\TaskItem.createdAt)]
         )
     }
 
     /// Urgent tasks first, then the rest, each in the order they were added or moved here.
+    private var pageTasks: [TaskItem] {
+        tasks.filter { period.page(of: $0.periodStart) == start }
+    }
+
     private var sortedTasks: [TaskItem] {
-        let ordered = tasks.sorted { $0.listOrder < $1.listOrder }
+        let ordered = pageTasks.sorted { $0.listOrder < $1.listOrder }
         return ordered.filter(\.isUrgent) + ordered.filter { !$0.isUrgent }
     }
 
@@ -232,9 +249,9 @@ struct TaskPage: View {
                     .onSubmit(addTask)
             }
 
-            if !tasks.isEmpty {
-                let done = tasks.filter(\.isDone).count
-                Text(L("%lld of %lld done", done, tasks.count))
+            if !rows.isEmpty {
+                let done = rows.filter(\.isDone).count
+                Text(L("%lld of %lld done", done, rows.count))
                     .font(.appFootnote)
                     .foregroundStyle(.secondary)
                     .listRowSeparator(.hidden)

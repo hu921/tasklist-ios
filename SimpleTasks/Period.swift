@@ -41,6 +41,14 @@ enum Period: String, CaseIterable, Identifiable {
         }
     }
 
+    /// The page a saved task belongs to, in the device's current time zone.
+    /// A task saved in another time zone (travel, or another device) has a
+    /// start that is a few hours off the local midnight; this rounds it to
+    /// the page it was meant for.
+    func page(of savedStart: Date, calendar: Calendar = .current) -> Date {
+        start(of: savedStart.addingTimeInterval(12 * 3600), calendar: calendar)
+    }
+
     /// Start of the page `value` pages away from `start`.
     func shift(_ start: Date, by value: Int, calendar: Calendar = .current) -> Date {
         let moved = calendar.date(byAdding: component, value: value, to: start) ?? start
