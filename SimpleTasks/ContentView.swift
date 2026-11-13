@@ -229,11 +229,17 @@ struct TaskPage: View {
             }
         }
         .listStyle(.plain)
+        // Dragging the list down hides the keyboard.
+        .scrollDismissesKeyboard(.immediately)
     }
 
     private func addTask() {
         let title = newTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !title.isEmpty else { return }
+        guard !title.isEmpty else {
+            // Return on an empty line hides the keyboard.
+            isAdding = false
+            return
+        }
         context.insert(TaskItem(title: title, period: period, periodStart: start))
         newTitle = ""
         isAdding = true
@@ -244,6 +250,7 @@ struct TaskPage: View {
 struct TaskRow: View {
     @Bindable var task: TaskItem
     var showsFlag = false
+    @FocusState private var isEditing: Bool
 
     var body: some View {
         HStack(spacing: 12) {
@@ -257,8 +264,16 @@ struct TaskRow: View {
             .accessibilityLabel(task.isDone ? "Mark not done" : "Mark done")
 
             TextField("Task", text: $task.title, axis: .vertical)
+                .focused($isEditing)
+                .submitLabel(.done)
                 .strikethrough(task.isDone)
                 .foregroundStyle(task.isDone ? .secondary : .primary)
+                .onChange(of: task.title) { _, title in
+                    // Return finishes editing instead of starting a new line.
+                    guard title.contains("\n") else { return }
+                    task.title = title.replacingOccurrences(of: "\n", with: "")
+                    isEditing = false
+                }
 
             if showsFlag {
                 Button {
