@@ -9,6 +9,7 @@ struct AboutView: View {
     @State private var isTestBuild = false
     @State private var isSavingLog = false
     @State private var logFile: LogDocument?
+    @State private var isWishing = false
 
     var body: some View {
         NavigationStack {
@@ -34,9 +35,9 @@ struct AboutView: View {
                     if let name = AppInfo.developerName {
                         LabeledContent("Developer", value: name)
                     }
-                    if let email = AppInfo.email, let mail = URL(string: "mailto:\(email)") {
-                        LabeledContent("Email") {
-                            Link(email, destination: mail)
+                    if let mail = AppInfo.contactMailURL {
+                        LabeledContent("Contact") {
+                            Link(AppInfo.supportEmail, destination: mail)
                         }
                     }
                     if let website = AppInfo.website {
@@ -46,15 +47,15 @@ struct AboutView: View {
                     }
                 }
 
-                if let wish = AppInfo.wishMailURL {
-                    Section {
-                        Link(destination: wish) {
-                            Label("Send a wish", systemImage: "sparkles")
-                        }
-                    } footer: {
-                        Text("Ideas or problems? Email \(AppInfo.supportEmail).")
-                            .font(.appFootnote)
+                Section {
+                    Button {
+                        isWishing = true
+                    } label: {
+                        Label("Send a wish", systemImage: "sparkles")
                     }
+                } footer: {
+                    Text("Share an idea or a problem, right here in the app.")
+                        .font(.appFootnote)
                 }
 
                 if !tips.products.isEmpty {
@@ -121,6 +122,7 @@ struct AboutView: View {
                 isTestBuild = await AppLog.isTestBuild()
             }
             .task { await tips.start() }
+            .sheet(isPresented: $isWishing) { WishFormView() }
             .fileExporter(
                 isPresented: $isSavingLog,
                 document: logFile,
