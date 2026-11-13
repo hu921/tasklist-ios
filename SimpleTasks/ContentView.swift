@@ -48,6 +48,9 @@ struct ContentView: View {
                     let pageStart = period.shift(period.start(of: now), by: offset)
                     pageHeader(period: period, pageStart: pageStart)
                     TaskPage(period: period, start: pageStart)
+                        // A new page for each tab and date, so unsent text
+                        // in "Add a task" does not follow you to another page.
+                        .id("\(period.rawValue)-\(pageStart.timeIntervalSince1970)")
                 } else {
                     SummaryView()
                         .padding(.top, 8)
