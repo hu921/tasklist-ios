@@ -140,3 +140,60 @@ func L(_ key: String, _ args: CVarArg...) -> String {
     let text = settings.bundle(for: settings.activeLanguage).localizedString(forKey: key, value: key, table: nil)
     return args.isEmpty ? text : String(format: text, locale: settings.locale, arguments: args)
 }
+
+/// The user's name, shown as initials on the Settings button.
+/// Saved in the user's own iCloud (key-value storage), so it shows on all
+/// their devices. Also kept on this device for when iCloud is off.
+@Observable
+final class Profile {
+    static let shared = Profile()
+
+    var name: String {
+        didSet {
+            guard name != oldValue else { return }
+            UserDefaults.standard.set(name, forKey: Self.key)
+            cloud.set(name, forKey: Self.key)
+            cloud.synchronize()
+        }
+    }
+
+    @ObservationIgnored private let cloud = NSUbiquitousKeyValueStore.default
+    private static let key = "profileName"
+
+    private init() {
+        name = NSUbiquitousKeyValueStore.default.string(forKey: Self.key)
+            ?? UserDefaults.standard.string(forKey: Self.key) ?? ""
+        NotificationCenter.default.addObserver(
+            forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+            object: cloud, queue: .main
+        ) { [weak self] _ in
+            guard let self, let new = self.cloud.string(forKey: Self.key), new != self.name else { return }
+            self.name = new
+        }
+        cloud.synchronize()
+    }
+
+    /// "Sara Hu" → "SH", "Sara" → "S", "胡莎拉" → "胡". Empty when no name.
+    var initials: String {
+        let words = name.split(whereSeparator: \.isWhitespace)
+        guard let first = words.first?.first else { return "" }
+        if words.count > 1, let last = words.last?.first {
+            return (String(first) + String(last)).uppercased()
+        }
+        return String(first).uppercased()
+    }
+}
+
+/// An orange circle with the user's initials.
+struct InitialsBadge: View {
+    let initials: String
+    var size: CGFloat = 28
+
+    var body: some View {
+        Text(initials)
+            .font(.system(size: size * 0.4, weight: .semibold))
+            .foregroundStyle(.white)
+            .frame(width: size, height: size)
+            .background(Circle().fill(Color.accentColor))
+    }
+}

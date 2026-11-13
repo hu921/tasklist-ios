@@ -45,6 +45,9 @@
 "The tip could not be confirmed." = "The tip could not be confirmed.";
 "Waiting for approval." = "Waiting for approval.";
 "The tip did not go through." = "The tip did not go through.";
+"Profile" = "Profile";
+"Your name" = "Your name";
+"Your initials show at the top. Syncs through your iCloud." = "Your initials show at the top. Syncs through your iCloud.";
 "Appearance" = "Appearance";
 "Theme" = "Theme";
 "System" = "System";

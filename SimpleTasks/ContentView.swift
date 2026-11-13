@@ -78,8 +78,15 @@ struct ContentView: View {
                         showsAbout = true
                         #endif
                     } label: {
-                        Image(systemName: "gearshape")
+                        // The user's initials once a name is set, otherwise a gear.
+                        if Profile.shared.initials.isEmpty {
+                            Image(systemName: "gearshape")
+                                .foregroundStyle(.tint)
+                        } else {
+                            InitialsBadge(initials: Profile.shared.initials)
+                        }
                     }
+                    .buttonStyle(.plain)
                     .keyboardShortcut(",", modifiers: .command)
                     .accessibilityLabel(L("Settings"))
                 }
