@@ -37,6 +37,7 @@ final class SyncStatus {
 
     func usingCloud() {
         update { $0.storage = "iCloud" }
+        AppLog.log("storage", "iCloud")
         log.notice("Store opened with iCloud sync")
     }
 
@@ -47,6 +48,7 @@ final class SyncStatus {
             $0.lastError = "Setup: \(text)"
         }
         log.error("iCloud store failed, using local store: \(text, privacy: .public)")
+        AppLog.log("storage", "this device only, \(text)")
     }
 
     func checkAccount() async {
@@ -64,6 +66,7 @@ final class SyncStatus {
             text = "Error: \(Self.describe(error))"
         }
         log.notice("iCloud account: \(text, privacy: .public)")
+        AppLog.log("iCloud account", text)
         update { $0.account = text }
     }
 
@@ -76,7 +79,9 @@ final class SyncStatus {
         case .export: kind = "Upload"
         @unknown default: kind = "Sync"
         }
+        let duration = "\(Int(end.timeIntervalSince(event.startDate) * 1000)) ms"
         if event.succeeded {
+            AppLog.log("sync \(kind.lowercased()) ok", duration)
             let time = end.formatted(date: .omitted, time: .shortened)
             update {
                 $0.lastSync = "\(kind) OK at \(time)"
@@ -87,6 +92,7 @@ final class SyncStatus {
             let text = event.error.map(Self.describe) ?? "Unknown error"
             update { $0.lastError = "\(kind): \(text)" }
             log.error("\(kind, privacy: .public) failed: \(text, privacy: .public)")
+            AppLog.log("sync \(kind.lowercased()) failed", "\(duration), \(text)")
         }
     }
 

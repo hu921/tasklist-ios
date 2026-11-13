@@ -208,12 +208,16 @@ struct TaskPage: View {
                         }
                         Divider()
                         Button("Delete", systemImage: "trash", role: .destructive) {
+                            AppLog.log("task deleted", period.rawValue)
                             context.delete(task)
                         }
                     }
             }
             .onDelete { indexes in
-                for index in indexes { context.delete(rows[index]) }
+                for index in indexes {
+                    AppLog.log("task deleted", period.rawValue)
+                    context.delete(rows[index])
+                }
             }
 
             HStack(spacing: 12) {
@@ -248,6 +252,7 @@ struct TaskPage: View {
             return
         }
         context.insert(TaskItem(title: title, period: period, periodStart: start))
+        AppLog.log("task added", period.rawValue)
         newTitle = ""
         isAdding = true
     }
@@ -285,7 +290,10 @@ struct TaskRow: View {
                         guard !focused else { return }
                         isEditing = false
                         // Erasing all the text removes the task.
-                        if task.isBlank { context.delete(task) }
+                        if task.isBlank {
+                            AppLog.log("empty task removed")
+                            context.delete(task)
+                        }
                     }
                     .onChange(of: task.title) { _, title in
                         // Return finishes editing instead of starting a new line.
@@ -305,6 +313,7 @@ struct TaskRow: View {
             if showsFlag {
                 Button {
                     task.isUrgent.toggle()
+                    AppLog.log("flag", task.isUrgent ? "on" : "off")
                 } label: {
                     Image(systemName: task.isUrgent ? "flag.fill" : "flag")
                         .font(.title3)
@@ -319,6 +328,7 @@ struct TaskRow: View {
     private func toggle() {
         task.isDone.toggle()
         task.completedAt = task.isDone ? .now : nil
+        AppLog.log(task.isDone ? "task done" : "task not done")
     }
 }
 

@@ -37,6 +37,7 @@ final class TaskItem {
     /// otherwise on the page that contains the start of its current page.
     func move(to target: Period, now: Date = .now) {
         guard target != period else { return }
+        AppLog.log("task moved", "\(period.rawValue) to \(target.rawValue)")
         let end = period.shift(periodStart, by: 1)
         let anchor = (periodStart..<end).contains(now) ? now : periodStart
         periodRaw = target.rawValue
