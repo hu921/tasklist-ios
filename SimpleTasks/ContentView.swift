@@ -36,6 +36,7 @@ struct ContentView: View {
     @State private var offset = 0
     @State private var now = Date.now
     @State private var showsAbout = false
+    @State private var didRefresh = false
     #if os(macOS)
     @Environment(\.openWindow) private var openWindow
     #endif
@@ -157,6 +158,10 @@ struct ContentView: View {
     }
 
     private func refresh() {
+        // Launch can ask twice (start + becoming active). Skip a repeat within
+        // 2 seconds on the same day, so carry-over runs once.
+        if Date.now.timeIntervalSince(now) < 2, Calendar.current.isDateInToday(now), didRefresh { return }
+        didRefresh = true
         // Always use the device's current time zone.
         NSTimeZone.resetSystemTimeZone()
         now = .now

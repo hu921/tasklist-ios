@@ -11,6 +11,18 @@ import os
 enum AppLog {
     private static let queue = DispatchQueue(label: "com.hu921.simpletasks.applog")
     private static let logger = Logger(subsystem: "com.hu921.simpletasks", category: "app")
+    /// The file is written only in test builds; App Store copies skip the disk work.
+    /// Starts true so launch lines are kept until the check below finishes.
+    nonisolated(unsafe) private static var writesFile = true
+
+    /// Call once at launch.
+    static func checkBuild() {
+        Task.detached {
+            let test = await isTestBuild()
+            queue.async { writesFile = test }
+        }
+    }
+
     /// When the file grows past this size, the older half is dropped.
     private static let maxBytes: UInt64 = 256 * 1024
 
@@ -24,7 +36,7 @@ enum AppLog {
         let text = detail.isEmpty ? event : "\(event): \(detail)"
         logger.notice("\(text, privacy: .public)")
         let line = "\(Date.now.ISO8601Format()) \(text)\n"
-        queue.async { append(line) }
+        queue.async { if writesFile { append(line) } }
     }
 
     /// Logs an error with its domain and code.
