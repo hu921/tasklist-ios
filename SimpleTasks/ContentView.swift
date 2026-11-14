@@ -36,6 +36,9 @@ struct ContentView: View {
     @State private var offset = 0
     @State private var now = Date.now
     @State private var showsAbout = false
+    #if os(macOS)
+    @Environment(\.openWindow) private var openWindow
+    #endif
 
     var body: some View {
         NavigationStack {
@@ -48,6 +51,9 @@ struct ContentView: View {
                     let pageStart = period.shift(period.start(of: now), by: offset)
                     pageHeader(period: period, pageStart: pageStart)
                     TaskPage(period: period, start: pageStart)
+                        // A new page for each tab and date, so unsent text
+                        // in "Add a task" does not follow you to another page.
+                        .id("\(period.rawValue)-\(pageStart.timeIntervalSince1970)")
                 } else {
                     SummaryView()
                         .padding(.top, 8)
@@ -65,10 +71,23 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
+                        #if os(macOS)
+                        // On Mac, Settings opens in its own window you can resize.
+                        openWindow(id: SimpleTasksApp.settingsWindowID)
+                        #else
                         showsAbout = true
+                        #endif
                     } label: {
-                        Image(systemName: "gearshape")
+                        // The user's initials once a name is set, otherwise a gear.
+                        if Profile.shared.initials.isEmpty {
+                            Image(systemName: "gearshape")
+                                .foregroundStyle(.tint)
+                        } else {
+                            InitialsBadge(initials: Profile.shared.initials)
+                        }
                     }
+                    .buttonStyle(.plain)
+                    .keyboardShortcut(",", modifiers: .command)
                     .accessibilityLabel(L("Settings"))
                 }
             }

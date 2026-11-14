@@ -45,6 +45,9 @@
 "The tip could not be confirmed." = "無法確認這筆贊助。";
 "Waiting for approval." = "等待核准中。";
 "The tip did not go through." = "贊助沒有完成。";
+"Profile" = "個人資料";
+"Your name" = "你的名字";
+"Your initials show at the top. Syncs through your iCloud." = "名字縮寫會顯示在上方，並透過你的 iCloud 同步。";
 "Appearance" = "外觀";
 "Theme" = "主題";
 "System" = "系統";

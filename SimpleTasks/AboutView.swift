@@ -30,6 +30,8 @@ struct AboutView: View {
                     .padding(.vertical, 8)
                 }
 
+                ProfileSection()
+
                 Section {
                     LabeledContent(L("Version"), value: AppInfo.version)
                     if let name = AppInfo.developerName {
@@ -150,6 +152,35 @@ struct AboutView: View {
         #if os(macOS)
         .frame(minWidth: 360, minHeight: 380)
         #endif
+    }
+}
+
+/// The user's name. Only the name is saved, in the user's own iCloud.
+private struct ProfileSection: View {
+    @Bindable private var profile = Profile.shared
+
+    var body: some View {
+        Section {
+            HStack(spacing: 12) {
+                if profile.initials.isEmpty {
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: 36))
+                        .foregroundStyle(.tint)
+                } else {
+                    InitialsBadge(initials: profile.initials, size: 36)
+                }
+                TextField(L("Your name"), text: $profile.name)
+                    #if os(iOS)
+                    .textContentType(.name)
+                    .submitLabel(.done)
+                    #endif
+            }
+        } header: {
+            Text(L("Profile"))
+        } footer: {
+            Text(L("Your initials show at the top. Syncs through your iCloud."))
+                .font(.appFootnote)
+        }
     }
 }
 
