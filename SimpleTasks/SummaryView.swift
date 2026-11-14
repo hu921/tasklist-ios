@@ -18,30 +18,49 @@ enum WeeklySummary {
     static func compute(tasks: [TaskItem], now: Date = .now, calendar: Calendar = .current) -> [WeekStat] {
         guard let oldest = tasks.map(\.createdAt).min() else { return [] }
         let firstWeek = Period.weekly.start(of: oldest, calendar: calendar)
-        var week = Period.weekly.start(of: now, calendar: calendar)
-        var stats: [WeekStat] = []
+        let thisWeek = Period.weekly.start(of: now, calendar: calendar)
 
-        while week >= firstWeek {
-            let end = Period.weekly.shift(week, by: 1, calendar: calendar)
-            var done = 0
-            var notDone = 0
-            for task in tasks where task.createdAt < end {
-                if task.isDone, let completed = task.completedAt {
-                    if completed >= week && completed < end {
-                        done += 1
-                    } else if completed >= end {
-                        notDone += 1
-                    }
-                } else if !task.isDone {
-                    notDone += 1
-                }
-            }
-            if done + notDone > 0 {
-                stats.append(WeekStat(start: week, done: done, notDone: notDone))
-            }
-            week = Period.weekly.shift(week, by: -1, calendar: calendar)
+        // All weeks from the oldest task to this week, oldest first.
+        var weeks: [Date] = []
+        var index: [Date: Int] = [:]
+        var week = firstWeek
+        while week <= thisWeek {
+            index[week] = weeks.count
+            weeks.append(week)
+            week = Period.weekly.shift(week, by: 1, calendar: calendar)
         }
-        return stats
+        func slot(_ date: Date) -> Int? { index[Period.weekly.start(of: date, calendar: calendar)] }
+
+        // One pass over the tasks. A task counts as "not done" in every week from
+        // the week it was added until the week before it was checked off (or this
+        // week, if still open). `open` marks where that run starts and stops.
+        var done = [Int](repeating: 0, count: weeks.count)
+        var open = [Int](repeating: 0, count: weeks.count + 1)
+        for task in tasks {
+            guard let first = slot(task.createdAt) else { continue }
+            if task.isDone {
+                guard let completed = task.completedAt else { continue }
+                let doneWeek = slot(completed) ?? (completed > now ? weeks.count : -1)
+                if doneWeek < weeks.count, doneWeek >= first { done[doneWeek] += 1 }
+                if doneWeek > first {
+                    open[first] += 1
+                    open[min(doneWeek, weeks.count)] -= 1
+                }
+            } else {
+                open[first] += 1
+                open[weeks.count] -= 1
+            }
+        }
+
+        var stats: [WeekStat] = []
+        var running = 0
+        for i in weeks.indices {
+            running += open[i]
+            if done[i] + running > 0 {
+                stats.append(WeekStat(start: weeks[i], done: done[i], notDone: running))
+            }
+        }
+        return stats.reversed()
     }
 }
 
