@@ -90,3 +90,9 @@
 "Send" = "送出";
 "Please sign in to iCloud in Settings to send a wish." = "請先在「設定」中登入 iCloud，才能許願。";
 "Could not send. Please check your internet and try again." = "無法送出，請檢查網路後再試一次。";
+/* Sharing a task */
+"Share…" = "分享…";
+"Task for you: “%@”" = "給你的待辦：「%@」";
+"Tap to add it in Simple Todo:" = "點這裡加到 Simple Todo：";
+"Add this task?" = "要加入這個待辦嗎？";
+"Add to %@" = "加到%@";

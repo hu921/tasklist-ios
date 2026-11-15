@@ -37,6 +37,8 @@ struct ContentView: View {
     @State private var now = Date.now
     @State private var showsAbout = false
     @State private var didRefresh = false
+    /// A task a friend shared, waiting for "Add" or "Cancel".
+    @State private var incoming: SharedTask?
     #if os(macOS)
     @Environment(\.openWindow) private var openWindow
     #endif
@@ -115,6 +117,32 @@ struct ContentView: View {
             refresh()
         }
         .task { refresh() }
+        .onOpenURL { url in
+            if let shared = SharedTask(url: url) {
+                AppLog.log("shared task opened", shared.period.rawValue)
+                incoming = shared
+            }
+        }
+        .alert(
+            L("Add this task?"),
+            isPresented: Binding(get: { incoming != nil }, set: { if !$0 { incoming = nil } }),
+            presenting: incoming
+        ) { shared in
+            Button(L("Add to %@", shared.period.title)) { add(shared) }
+            Button(L("Cancel"), role: .cancel) { incoming = nil }
+        } message: { shared in
+            Text("“\(shared.title)”")
+        }
+    }
+
+    /// Adds a shared task to the current day, week, or month, and shows that list.
+    private func add(_ shared: SharedTask) {
+        let start = shared.period.start(of: .now)
+        context.insert(TaskItem(title: shared.title, period: shared.period, periodStart: start))
+        AppLog.log("shared task added", shared.period.rawValue)
+        incoming = nil
+        tab = AppTab(rawValue: shared.period.rawValue) ?? .daily
+        offset = 0
     }
 
     private func pageHeader(period: Period, pageStart: Date) -> some View {
@@ -246,6 +274,12 @@ struct TaskPage: View {
                         ForEach(Period.allCases.filter { $0 != period }) { target in
                             Button(L("Move to %@", target.title), systemImage: "arrow.right") {
                                 task.move(to: target)
+                            }
+                        }
+                        if !task.isBlank {
+                            let shared = SharedTask(title: task.title, period: period)
+                            ShareLink(item: shared.message) {
+                                Label(L("Share…"), systemImage: "square.and.arrow.up")
                             }
                         }
                         Divider()
