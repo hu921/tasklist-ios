@@ -25,6 +25,7 @@
 		BE033CBB3368B592D434F820 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D19613A49A01F6BDD96DB4D /* OpenSans-Regular.ttf */; };
 		C5377EC406E0B552C09EB16A /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26312631123A23E82C3980E7 /* AppSettings.swift */; };
 		C5E0068240B20AA2FDA0BEE8 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 912E5D95F305423BC87E9393 /* Roboto-Bold.ttf */; };
+		CA17ED6F75D593DAF542D4B0 /* SharedTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F7C540B125937C9EB6CCDE7 /* SharedTask.swift */; };
 		CCD10D626797F600200243EC /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BCD231113F7D21B658408E /* AppInfo.swift */; };
 		DF7DF6C8402E779D99740167 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3ACE842AD641942AB6803D10 /* Lato-Bold.ttf */; };
 		E96A6A985179986FFFF743BD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1EA0A205937F70193582EFC /* Localizable.strings */; };
@@ -47,6 +48,7 @@
 		3ACE842AD641942AB6803D10 /* Lato-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
 		400AD974241E608C516BE526 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		4C730035E9268C939266CB21 /* Lato-LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = "Lato-LICENSE.txt"; sourceTree = "<group>"; };
+		4F1A7ADB3A1B4380D3081860 /* InfoMac.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = InfoMac.plist; sourceTree = "<group>"; };
 		4FD31486B10356724DA164F1 /* AboutView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		5404914D6BFE67CBF1EB1982 /* TipJar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TipJar.swift; sourceTree = "<group>"; };
 		5D19613A49A01F6BDD96DB4D /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 		8D3C63BC4327D5AAE96F6214 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9062E6886FB779FDA130B9A5 /* AppLog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppLog.swift; sourceTree = "<group>"; };
 		912E5D95F305423BC87E9393 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		9F7C540B125937C9EB6CCDE7 /* SharedTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SharedTask.swift; sourceTree = "<group>"; };
 		AC02CD34F847F903B37EE0BA /* Roboto-LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = "Roboto-LICENSE.txt"; sourceTree = "<group>"; };
 		B2BCD231113F7D21B658408E /* AppInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		BF346DF4EB93ACBA52C9D624 /* zh-Hant */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				8018F343438F8DE1AAE2F81F /* WishFormView.swift */,
 				26312631123A23E82C3980E7 /* AppSettings.swift */,
 				B1EA0A205937F70193582EFC /* Localizable.strings */,
+				9F7C540B125937C9EB6CCDE7 /* SharedTask.swift */,
+				4F1A7ADB3A1B4380D3081860 /* InfoMac.plist */,
 			);
 			name = SimpleTasks;
 			path = SimpleTasks;
@@ -249,6 +254,7 @@
 				FBE81345ED5B59D7204A76FE /* TipJar.swift in Sources */,
 				830AB86E53F6E7FB5D3EF820 /* WishFormView.swift in Sources */,
 				C5377EC406E0B552C09EB16A /* AppSettings.swift in Sources */,
+				CA17ED6F75D593DAF542D4B0 /* SharedTask.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,13 +282,13 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleTasks/SimpleTasks.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimpleTasks/Info.plist;
-				"INFOPLIST_FILE[sdk=macosx*]" = "";
+				"INFOPLIST_FILE[sdk=macosx*]" = SimpleTasks/InfoMac.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple Todo";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -385,13 +391,13 @@
 				CODE_SIGN_ENTITLEMENTS = SimpleTasks/SimpleTasks.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = SimpleTasks/SimpleTasksMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimpleTasks/Info.plist;
-				"INFOPLIST_FILE[sdk=macosx*]" = "";
+				"INFOPLIST_FILE[sdk=macosx*]" = SimpleTasks/InfoMac.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple Todo";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";

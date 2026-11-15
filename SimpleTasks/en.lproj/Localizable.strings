@@ -90,3 +90,9 @@
 "Send" = "Send";
 "Please sign in to iCloud in Settings to send a wish." = "Please sign in to iCloud in Settings to send a wish.";
 "Could not send. Please check your internet and try again." = "Could not send. Please check your internet and try again.";
+/* Sharing a task */
+"Share…" = "Share…";
+"Task for you: “%@”" = "Task for you: “%@”";
+"Tap to add it in Simple Todo:" = "Tap to add it in Simple Todo:";
+"Add this task?" = "Add this task?";
+"Add to %@" = "Add to %@";
